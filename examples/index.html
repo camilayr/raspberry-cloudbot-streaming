@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>KVS WebRTC Test Page</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="loader.css">
+    <link rel="stylesheet" href="./app.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.585.0.min.js"></script>
+    <script src="https://unpkg.com/@ungap/url-search-params"></script>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+    <link rel="icon" type="image/png" href="favicon.ico">
+    <script>
+        function myFunction() {
+            ROLE = 'master';
+            $('#form').addClass('d-none');
+            $('#master').removeClass('d-none');
+
+            const localView = $('#master .local-view')[0];
+            const remoteView = $('#master .remote-view')[0];
+            const localMessage = $('#master .local-message')[0];
+            const remoteMessage = $('#master .remote-message')[0];
+            //const formValues = getFormValues();
+            formValues = 'dummy';
+
+            $(remoteMessage).empty();
+            localMessage.value = '';
+
+            startMaster(localView, remoteView, formValues, onStatsReport, event => {
+                remoteMessage.append(`${event.data}\n`);
+            });
+        }
+    </script>
+</head>
+<body onload="myFunction()">
+
+<div class="container mt-3">
+    <h1>Transmisión Web Larebot</h1>
+    <p>Esta es la transmisión web de larebot</p>
+
+    <div class="row loader"></div>
+    <div id="main" class="d-none">
+        <form id="form">
+            <div>
+                <button id="master-button" type="button" class="btn btn-primary">Start Master</button>
+            </div>
+        </form>
+
+        <div id="master" class="d-none">
+            <h2>Master</h2>
+            <div class="row">
+                <div class="col">
+                    <h5>Master Section</h5>
+                    <div class="video-container"><video class="local-view" autoplay playsinline controls muted /></div>
+                </div>
+            </div>
+            <div class="row datachannel">
+                <div class="col">
+                    <div class="form-group">
+                      <textarea type="text" class="form-control local-message" placeholder="DataChannel Message"> </textarea>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card bg-light mb-3">
+                        <pre class="remote-message card-body text-monospace preserve-whitespace"></pre>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <button id="stop-master-button" type="button" class="btn btn-primary">Stop Master</button>
+            </div>
+        </div>
+
+        <!-- <h3 id="logs-header">Logs</h3>
+        <div class="card bg-light mb-3">
+            <pre id="logs" class="card-body text-monospace preserve-whitespace"></pre>
+        </div> -->
+
+    </div>
+</div>
+
+<div id="test"></div>
+
+<script src="../kvs-webrtc.js"></script>
+<script src="./master.js"></script>
+<script src="./app.js"></script>
+
+</body>
+</html>
